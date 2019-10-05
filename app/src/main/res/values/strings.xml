@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">MyNews</string>
+    <string name="tab_text_1">Top Stories</string>
+    <string name="tab_text_2">Most Popular</string>
+    <string name="tab_text_3">Business</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="top_stories">Top Stories</string>
+    <string name="most_popular">Most Popular</string>
+    <string name="interests">Interests</string>
+    <string name="more_vert">more settings</string>
+    <string name="search_input">Search query term</string>
+    <string name="enable_notifications">Enable notifications (once per day)</string>
+</resources>
