@@ -1,5 +1,7 @@
 package com.example.customnews.services
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.customnews.R
-import com.example.customnews.data.Post
 import com.example.customnews.data.Results
 import kotlinx.android.synthetic.main.layout_news_list_item.view.*
+import java.text.SimpleDateFormat
 
 class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: ArrayList<Results> = ArrayList()
@@ -25,7 +27,7 @@ class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         )
     }
 
-    fun updateNewsItems(newList : List<Results>){
+    fun updateNewsItems(newList: List<Results>) {
         items.clear()
         items.addAll(newList)
         notifyDataSetChanged()
@@ -45,7 +47,6 @@ class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     fun submitList(postList: List<Results>) {
         items = postList
     }*/
-
     //Creating a custom view holder, to reflect how my entries are going to look like
     class NewsViewHolder constructor(
         itemView: View
@@ -56,25 +57,64 @@ class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val newsTitle = itemView.title_view
 
         fun bind(results: Results) {
-            itemView.setOnClickListener{
+            itemView.setOnClickListener {
                 //Code for opening browser
-                Toast.makeText(itemView.context,results.title, Toast.LENGTH_SHORT).show()
+                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(results.url))
+                itemView.context.startActivity(webIntent)
+
             }
             newsSection.text = results.section
-            newsPublished.text = results.published
-            newsTitle.text = results.title
+            //Parsing the date pattern("yyyy-MM-dd'T'HH:mm:ssZ")
+            //Create our final date format
+            val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+            //Create our incoming date format
+            val readDateFormatLong = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+            val readDateFormatShort = SimpleDateFormat("yyyy-MM-dd")
+            //Read the time info and create a Date object
+            if (results.published != null) {
+                val date = readDateFormatLong.parse(results.published)
+                val dateParsed = dateFormat.format(date)
+                newsPublished.text = dateParsed
+                newsTitle.text = results.title
+            } else {
+                val date = readDateFormatShort.parse(results.published_date)
+                val dateParsed = dateFormat.format(date)
+                newsPublished.text = dateParsed
+                newsTitle.text = results.title
+            }
+
 
             val requestOptions = RequestOptions()
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_launcher_background)
+                .placeholder(R.drawable.thetimes)
+                .error(R.drawable.thetimes)
+                .fallback(R.drawable.thetimes)
 
-            if(!results.multimedia.isNullOrEmpty()) {
 
+            //Check for image directories and files
+            if (results.multimedia.isNullOrEmpty()) {
+                if (results.media.isNullOrEmpty()) {
+                    //Use dummy image
+                    Glide.with(itemView.context)
+                        .applyDefaultRequestOptions(requestOptions)
+                        .load(R.drawable.thetimes)
+                        .into(newsImage)
+                } else {    //Use image from most shared structure
+                    Glide.with(itemView.context)
+                        .applyDefaultRequestOptions(requestOptions)
+                        .load(if (results.media[0].mediaMeta.size > 1) results.media[0].mediaMeta[1].url else results.media[0].mediaMeta[0].url)
+                        .into(newsImage)
+                }
+
+            } else {    //Use image from default structure
                 Glide.with(itemView.context)
                     .applyDefaultRequestOptions(requestOptions)
-                    .load(if (results.multimedia.size>1 ) results.multimedia[1].url  else results.multimedia[0].url)
+                    .load(if (results.multimedia.size > 1) results.multimedia[1].url else results.multimedia[0].url)
                     .into(newsImage)
+
             }
         }
+
+
     }
+
 }

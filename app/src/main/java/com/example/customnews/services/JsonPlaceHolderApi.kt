@@ -18,7 +18,14 @@ interface JsonPlaceHolderApi {
 //    topstories/v2/business.json
 
     @GET("topstories/v2/home.json")
-    suspend fun getPostList(): retrofit2.Response<Post>
+    suspend fun getTopStories(): retrofit2.Response<Post>
+
+    @GET("topstories/v2/business.json")
+    suspend fun getBusinessStories(): retrofit2.Response<Post>
+
+    @GET("mostpopular/v2/shared/1/twitter.json")
+    suspend fun getMostPopular(): retrofit2.Response<Post>
+
 
     companion object {
         operator fun invoke(): JsonPlaceHolderApi {

@@ -1,21 +1,16 @@
 package com.example.customnews
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.customnews.data.Post
 import com.example.customnews.data.Results
 import com.example.customnews.services.JsonPlaceHolderApi
 import com.example.customnews.services.NewsRecyclerAdapter
-import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.frag_one.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -26,6 +21,7 @@ class FragOne : Fragment() {
 
     private var root: View? = null
     private lateinit var newsAdapter: NewsRecyclerAdapter
+    //private lateinit var job: CompletableJob
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,8 +41,14 @@ class FragOne : Fragment() {
 
     }
 
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        job.cancel()
+//
+//    }
+
     private suspend fun networkCall(): Response<Post> {
-        return JsonPlaceHolderApi().getPostList()
+        return JsonPlaceHolderApi().getTopStories()
     }
 
     private fun initRecyclerView() {
@@ -58,7 +60,7 @@ class FragOne : Fragment() {
     }
 
     private fun addDataSet() {
-        CoroutineScope(IO).launch {
+       CoroutineScope(IO).launch {
             val response = networkCall()
             if (response.isSuccessful) {
                 val post = response.body()!!
