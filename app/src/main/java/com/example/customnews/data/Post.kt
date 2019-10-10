@@ -7,5 +7,6 @@ data class Post (
      val num_results : Int,
      val results :List<Results>,
      val section : String,
-     val status : String
+     val status : String,
+     val response: List<Response>
 )

@@ -9,14 +9,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.customnews.R
+import com.example.customnews.data.Docs
+import com.example.customnews.data.Response
 import com.example.customnews.data.Results
 import kotlinx.android.synthetic.main.layout_news_list_item.view.*
 import java.text.SimpleDateFormat
 
-class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var items: ArrayList<Results> = ArrayList()
+class SearchRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var items: ArrayList<Docs> = ArrayList()
 
-    override fun onCreateViewHolder (parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return NewsViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.layout_news_list_item,
@@ -36,22 +38,23 @@ class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    //Creating a custom view holder, to reflect how my entries are going to look like in Top Stories and Business tabs
-    class NewsViewHolder constructor (
+    //Creating a custom view holder, to reflect how my entries are going to look like in the SearchResults activity
+    class NewsViewHolder constructor(
         itemView: View
     ) : RecyclerView.ViewHolder(itemView) {
         val newsImage = itemView.image_view
         val newsSection = itemView.section_view
         val newsPublished = itemView.date_view
         val newsTitle = itemView.title_view
-        fun bind(results: Results) {
+        fun bind(docs: Docs) {
             itemView.setOnClickListener {
                 //Code for opening browser
-                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(results.url))
+                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(docs.url))
                 itemView.context.startActivity(webIntent)
 
             }
-            newsSection.text = results.section
+            newsSection.text = docs.section
+            newsTitle.text = docs.headline[0].main
             //Parsing the date pattern("yyyy-MM-dd'T'HH:mm:ssZ")
             //Create our final date format
             val dateFormat = SimpleDateFormat("dd/MM/yyyy")
@@ -59,17 +62,18 @@ class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             val readDateFormatLong = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
             val readDateFormatShort = SimpleDateFormat("yyyy-MM-dd")
             //Read the time info and create a Date object
-            if (results.published != null) {
-                val date = readDateFormatLong.parse(results.published)
+            if (docs.pub_date != null) {
+                val date = readDateFormatLong.parse(docs.pub_date)
                 val dateParsed = dateFormat.format(date)
                 newsPublished.text = dateParsed
-                newsTitle.text = results.title
-            } else {
-                val date = readDateFormatShort.parse(results.published_date)
-                val dateParsed = dateFormat.format(date)
-                newsPublished.text = dateParsed
-                newsTitle.text = results.title
+                newsTitle.text = docs.headline[0].main
             }
+//            else {
+//                val date = readDateFormatShort.parse(results.published_date)
+//                val dateParsed = dateFormat.format(date)
+//                newsPublished.text = dateParsed
+//                newsTitle.text = results.title
+//            }
 
 
             val requestOptions = RequestOptions()
@@ -79,32 +83,23 @@ class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
             //Check for image directories and files
-            if (results.multimedia.isNullOrEmpty()) {
-                if (results.media.isNullOrEmpty()) {
-                    //Use dummy image
-                    Glide.with(itemView.context)
-                        .applyDefaultRequestOptions(requestOptions)
-                        .load(R.drawable.thetimes)
-                        .into(newsImage)
-                } else {    //Use image from most shared structure
-                    Glide.with(itemView.context)
-                        .applyDefaultRequestOptions(requestOptions)
-                        .load(if (results.media[0].mediaMeta.size > 1) results.media[0].mediaMeta[1].url else results.media[0].mediaMeta[0].url)
-                        .into(newsImage)
-                }
-
-            } else {    //Use image from default structure
+            if (docs.multimedia.isNullOrEmpty()) {
+                //Use dummy image
                 Glide.with(itemView.context)
                     .applyDefaultRequestOptions(requestOptions)
-                    .load(if (results.multimedia.size > 1) results.multimedia[1].url else results.multimedia[0].url)
+                    .load(R.drawable.thetimes)
                     .into(newsImage)
-
+            } else {    //Use image from most source
+                Glide.with(itemView.context)
+                    .applyDefaultRequestOptions(requestOptions)
+                    .load(docs.multimedia[0].url)
+                    .into(newsImage)
             }
-        }
 
+        }
     }
 
-    fun updateNewsItems(newList: List<Results>) {
+    fun updateNewsItems(newList: List<Docs>) {
         items.clear()
         items.addAll(newList)
         notifyDataSetChanged()

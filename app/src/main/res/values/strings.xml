@@ -10,4 +10,12 @@
     <string name="more_vert">more settings</string>
     <string name="search_input">Search query term</string>
     <string name="enable_notifications">Enable notifications (once per day)</string>
+    <string name="voluntary_search_field_one">Technology</string>
+    <string name="voluntary_search_field_two">Business</string>
+    <string name="voluntary_search_field_three">Environment</string>
+    <string name="voluntary_search_field_four">Movies</string>
+    <string name="voluntary_search_field_five">Politics</string>
+    <string name="voluntary_search_field_six">Classifieds</string>
+    <string name="search_button_text">Search</string>
+    <string name="search_field_hint">Search in articles...</string>
 </resources>

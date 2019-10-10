@@ -57,7 +57,7 @@ class FragTwo : Fragment() {
             val response = networkCall()
             if (response.isSuccessful) {
                 val post = response.body()!!
-                val data: List<Results> = post.results
+                val data: List<Results> = post.results.reversed()
                 updateOnMainThread(data)
             } else {
                 Toast.makeText(activity, "Failed to retrieve items", Toast.LENGTH_SHORT).show()

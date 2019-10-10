@@ -8,6 +8,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 const val apiKey = "dlAmtYCP6UbvGpnJXguK1iDoGTA6J94E"
 
@@ -25,6 +26,12 @@ interface JsonPlaceHolderApi {
 
     @GET("mostpopular/v2/shared/1/twitter.json")
     suspend fun getMostPopular(): retrofit2.Response<Post>
+
+    @GET ("search/v2/articlesearch.json")
+    suspend fun getSearchResults(
+        @Query("q") searchTerm : String,
+        @Query ("fq") searchSection : String
+    ): retrofit2.Response<Post>
 
 
     companion object {

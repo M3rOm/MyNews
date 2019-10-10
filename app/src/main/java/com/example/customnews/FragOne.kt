@@ -83,5 +83,4 @@ class FragOne : Fragment() {
         }
     }
 
-
 }
