@@ -8,5 +8,5 @@ data class Post (
      val results :List<Results>,
      val section : String,
      val status : String,
-     val response: List<Response>
+     val response: Response
 )

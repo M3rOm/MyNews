@@ -7,7 +7,7 @@ data class Docs(
     val url: String,
     val snippet: String,
     val multimedia: List<Multimedia>,
-    val headline: List<Headline>,
+    val headline: Headline,
     val pub_date: String,
     @SerializedName("news_desk")
     val section: String,

@@ -14,5 +14,5 @@ data class Results(
     val published: String,
     val published_date : String,
     val multimedia: List<Multimedia>,
-    val media: List<Media>
+    val media : String
 )

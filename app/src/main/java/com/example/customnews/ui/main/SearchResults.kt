@@ -1,19 +1,13 @@
 package com.example.customnews.ui.main
 
-import android.app.Fragment
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.customnews.R
 import com.example.customnews.data.Docs
 import com.example.customnews.data.Post
-import com.example.customnews.data.Results
 import com.example.customnews.services.JsonPlaceHolderApi
-import com.example.customnews.services.NewsRecyclerAdapter
 import com.example.customnews.services.SearchRecyclerAdapter
 import kotlinx.android.synthetic.main.frag_one.*
 import kotlinx.coroutines.CoroutineScope
@@ -37,7 +31,8 @@ class SearchResults : AppCompatActivity() {
 
 
     private suspend fun networkCall(): Response<Post> {
-        return JsonPlaceHolderApi().getSearchResults("time","news_desk:Technology")
+        val searchTerm = intent.getStringExtra(SEARCH_EXPRESSION)
+        return JsonPlaceHolderApi().getSearchResults(searchTerm,"news_desk:Technology")
     }
 
     private fun initRecyclerView() {
@@ -53,7 +48,7 @@ class SearchResults : AppCompatActivity() {
             val response = networkCall()
             if (response.isSuccessful) {
                 val post = response.body()!!
-                val data = post.response[0].docs
+                val data = post.response.docs
                 updateOnMainThread(data)
             } else {
                 Toast.makeText(this@SearchResults, "Failed to retrieve items", Toast.LENGTH_SHORT)

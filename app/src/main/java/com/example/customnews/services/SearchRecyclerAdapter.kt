@@ -54,7 +54,7 @@ class SearchRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
             }
             newsSection.text = docs.section
-            newsTitle.text = docs.headline[0].main
+            newsTitle.text = docs.headline.main
             //Parsing the date pattern("yyyy-MM-dd'T'HH:mm:ssZ")
             //Create our final date format
             val dateFormat = SimpleDateFormat("dd/MM/yyyy")
@@ -66,7 +66,6 @@ class SearchRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 val date = readDateFormatLong.parse(docs.pub_date)
                 val dateParsed = dateFormat.format(date)
                 newsPublished.text = dateParsed
-                newsTitle.text = docs.headline[0].main
             }
 //            else {
 //                val date = readDateFormatShort.parse(results.published_date)

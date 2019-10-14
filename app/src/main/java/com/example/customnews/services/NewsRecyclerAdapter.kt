@@ -2,6 +2,7 @@ package com.example.customnews.services
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,7 @@ import java.text.SimpleDateFormat
 class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: ArrayList<Results> = ArrayList()
 
-    override fun onCreateViewHolder (parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return NewsViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.layout_news_list_item,
@@ -37,7 +38,7 @@ class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     //Creating a custom view holder, to reflect how my entries are going to look like in Top Stories and Business tabs
-    class NewsViewHolder constructor (
+    class NewsViewHolder constructor(
         itemView: View
     ) : RecyclerView.ViewHolder(itemView) {
         val newsImage = itemView.image_view
@@ -87,10 +88,12 @@ class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         .load(R.drawable.thetimes)
                         .into(newsImage)
                 } else {    //Use image from most shared structure
-                    Glide.with(itemView.context)
-                        .applyDefaultRequestOptions(requestOptions)
-                        .load(if (results.media[0].mediaMeta.size > 1) results.media[0].mediaMeta[1].url else results.media[0].mediaMeta[0].url)
-                        .into(newsImage)
+                    val listOfMedia = results.media
+                    Log.d("Tab", listOfMedia)
+//                    Glide.with(itemView.context)
+//                        .applyDefaultRequestOptions(requestOptions)
+//                        .load(if (results.media[0].mediaMeta.size > 1) results.media[0].mediaMeta[1].url else results.media[0].mediaMeta[0].url)
+//                        .into(newsImage)
                 }
 
             } else {    //Use image from default structure
