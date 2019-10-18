@@ -91,7 +91,7 @@ class SearchRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             } else {    //Use image from most source
                 Glide.with(itemView.context)
                     .applyDefaultRequestOptions(requestOptions)
-                    .load(docs.multimedia[0].url)
+                    .load("https://www.nytimes.com/" + docs.multimedia[0].url)
                     .into(newsImage)
             }
 

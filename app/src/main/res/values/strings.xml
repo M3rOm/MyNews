@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">MyNews</string>
+    <string name="search_activity_name">Search Articles</string>
     <string name="tab_text_1">Top Stories</string>
     <string name="tab_text_2">Most Popular</string>
     <string name="tab_text_3">Business</string>

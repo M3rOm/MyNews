@@ -14,23 +14,26 @@ const val apiKey = "dlAmtYCP6UbvGpnJXguK1iDoGTA6J94E"
 
 interface JsonPlaceHolderApi {
 
-//    mostpopular/v2/shared/1/twitter.json
-//    topstories/v2/home.json
-//    topstories/v2/business.json
-
+    //This value us for the Top Stories tab
     @GET("topstories/v2/home.json")
     suspend fun getTopStories(): retrofit2.Response<Post>
 
+    //This value is for the Business tab
     @GET("topstories/v2/business.json")
     suspend fun getBusinessStories(): retrofit2.Response<Post>
 
+    //This value is for the Most Shared tab
     @GET("mostpopular/v2/shared/1/twitter.json")
     suspend fun getMostPopular(): retrofit2.Response<Post>
 
+    //This value is for the Search function
     @GET ("search/v2/articlesearch.json")
     suspend fun getSearchResults(
         @Query("q") searchTerm : String,
-        @Query ("fq") searchSection : String
+        @Query ("fq") searchSection : String,
+        @Query("sort") sort : String,
+        @Query("begin_date") beginDate : String,
+        @Query("end_date") endDate : String
     ): retrofit2.Response<Post>
 
 

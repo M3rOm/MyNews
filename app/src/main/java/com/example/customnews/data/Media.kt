@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class Media (
     @SerializedName ("media-metadata")
-       val mediaMeta: List<MediaMeta>
+       val mediaMeta: List<MediaMeta>?
 )

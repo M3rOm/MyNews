@@ -1,17 +1,24 @@
 package com.example.customnews.services
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.customnews.FragOne
 import com.example.customnews.R
+import com.example.customnews.data.Media
 import com.example.customnews.data.Results
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.layout_news_list_item.view.*
+import org.json.JSONArray
 import java.text.SimpleDateFormat
 
 class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -47,9 +54,11 @@ class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val newsTitle = itemView.title_view
         fun bind(results: Results) {
             itemView.setOnClickListener {
-                //Code for opening browser
+                //Opening browser
                 val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(results.url))
                 itemView.context.startActivity(webIntent)
+                //Mark article as read
+                itemView.setBackgroundColor (ContextCompat.getColor(itemView.context, R.color.colorCardBackgroundClicked))
 
             }
             newsSection.text = results.section
@@ -81,19 +90,27 @@ class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
             //Check for image directories and files
             if (results.multimedia.isNullOrEmpty()) {
-                if (results.media.isNullOrEmpty()) {
-                    //Use dummy image
-                    Glide.with(itemView.context)
-                        .applyDefaultRequestOptions(requestOptions)
-                        .load(R.drawable.thetimes)
-                        .into(newsImage)
-                } else {    //Use image from most shared structure
-                    val listOfMedia = results.media
-                    Log.d("Tab", listOfMedia)
-//                    Glide.with(itemView.context)
-//                        .applyDefaultRequestOptions(requestOptions)
-//                        .load(if (results.media[0].mediaMeta.size > 1) results.media[0].mediaMeta[1].url else results.media[0].mediaMeta[0].url)
-//                        .into(newsImage)
+                results.media?.let { media ->
+                    val listOfMedia = results.media as ArrayList<Media>
+                    if (listOfMedia.isNullOrEmpty()) {
+                        //Use dummy image
+                        Glide.with(itemView.context)
+                            .applyDefaultRequestOptions(requestOptions)
+                            .load(R.drawable.thetimes)
+                            .into(newsImage)
+                    } else {    //Use image from most shared structure
+                        val mediaItem = Gson().fromJson(
+                            JSONArray(results.media).get(0).toString(),
+                            Media::class.java
+                        )
+                        mediaItem.mediaMeta?.let { mediaMeta ->
+
+                            Glide.with(itemView.context)
+                                .applyDefaultRequestOptions(requestOptions)
+                                .load(if (mediaMeta.size > 1) mediaMeta[1].url else mediaMeta[0].url)
+                                .into(newsImage)
+                        }
+                    }
                 }
 
             } else {    //Use image from default structure

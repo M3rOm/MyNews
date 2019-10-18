@@ -4,25 +4,41 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary" />
+
     <EditText
         android:id="@+id/search_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
+        android:layout_margin="8dp"
         android:hint="@string/search_field_hint"
         android:inputType="textPersonName" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_beginDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_marginBottom="0dp"
+                android:text="Begin Date"
+                android:textColor="@color/cardview_shadow_start_color"
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/begin_date"
@@ -70,6 +86,16 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/textView_endDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_marginBottom="0dp"
+                android:text="End Date"
+                android:textColor="@color/cardview_shadow_start_color"
+                android:textSize="14sp" />
+
             <EditText
                 android:id="@+id/end_date"
                 android:layout_width="match_parent"
@@ -116,6 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:background="@color/colorPrimary"
         android:text="@string/search_button_text" />
 
 </LinearLayout>
