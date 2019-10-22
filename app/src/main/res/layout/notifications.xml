@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_activity_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
@@ -11,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/notification_search_field"
             style="@style/style_settings_entries"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,7 +33,7 @@
         android:orientation="horizontal">
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/notification_checkBox1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -33,12 +41,12 @@
             android:layout_weight="1"
             android:padding="16dp"
             android:paddingStart="8dp"
-            android:text="Arts"
+            android:text="@string/voluntary_search_field_one"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
         <CheckBox
-            android:id="@+id/checkBox2"
+            android:id="@+id/notification_checkBox2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -46,8 +54,8 @@
             android:layout_weight="1"
             android:padding="16dp"
             android:paddingStart="8dp"
-            android:text="Politics"
-            app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+            android:text="@string/voluntary_search_field_two"
+            app:layout_constraintTop_toBottomOf="@+id/notification_checkBox1" />
 
     </LinearLayout>
 
@@ -58,7 +66,7 @@
         android:orientation="horizontal">
 
         <CheckBox
-            android:id="@+id/checkBox3"
+            android:id="@+id/notification_checkBox3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -66,11 +74,11 @@
             android:layout_weight="1"
             android:padding="16dp"
             android:paddingStart="8dp"
-            android:text="Business"
-            app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
+            android:text="@string/voluntary_search_field_three"
+            app:layout_constraintTop_toBottomOf="@+id/notification_checkBox2" />
 
         <CheckBox
-            android:id="@+id/checkBox4"
+            android:id="@+id/notification_checkBox4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -78,8 +86,8 @@
             android:layout_weight="1"
             android:padding="16dp"
             android:paddingStart="8dp"
-            android:text="Sport"
-            app:layout_constraintTop_toBottomOf="@+id/checkBox3" />
+            android:text="@string/voluntary_search_field_four"
+            app:layout_constraintTop_toBottomOf="@+id/notification_checkBox3" />
     </LinearLayout>
 
     <LinearLayout
@@ -88,13 +96,8 @@
         android:orientation="horizontal">
 
         <CheckBox
-            android:id="@+id/checkBox5"
+            android:id="@+id/notification_checkBox5"
             style="@style/custom_checkbox"
-            android:text="Entrepreneurs"
-            app:layout_constraintTop_toBottomOf="@+id/checkBox4" />
-
-        <CheckBox
-            android:id="@+id/checkBox6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -102,8 +105,20 @@
             android:layout_weight="1"
             android:padding="16dp"
             android:paddingStart="8dp"
-            android:text="Trvavel"
-            app:layout_constraintTop_toBottomOf="@+id/checkBox5" />
+            android:text="@string/voluntary_search_field_five"
+            app:layout_constraintTop_toBottomOf="@+id/notification_checkBox4" />
+
+        <CheckBox
+            android:id="@+id/notification_checkbox6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:padding="16dp"
+            android:paddingStart="8dp"
+            android:text="@string/voluntary_search_field_six"
+            app:layout_constraintTop_toBottomOf="@+id/notification_checkBox5" />
 
     </LinearLayout>
 

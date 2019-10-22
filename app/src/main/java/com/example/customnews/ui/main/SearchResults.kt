@@ -32,30 +32,20 @@ class SearchResults : AppCompatActivity() {
 
     //Specifying the type of the network call
     private suspend fun networkCall(): Response<Post> {
-        val sharedPref = getSharedPreferences(SEARCH_DATES, Context.MODE_PRIVATE)
+        val sharedPref = getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
         val beginDate = sharedPref.getString("begin", "20180101")
         val endDate = sharedPref.getString("end", "20190101")
-        val searchTerm = intent.getStringExtra(SEARCH_EXPRESSION)
-        val searchLocation = intent.getStringArrayListExtra(SEARCH_SECTIONS)
+        val searchTerm = sharedPref.getString("expression","news")
+        val searchLocation = sharedPref.getString("locations", "")
         return JsonPlaceHolderApi().getSearchResults(
             searchTerm,
-            formatter(searchLocation),
+            searchLocation,
             "newest",
             beginDate,
             endDate
         )
     }
-    //Creates the lucene compatible field grouping string for the api search
-    private fun formatter(searchLocation: ArrayList<String?>): String {
-        var result = "news_desk:(${searchLocation[0]}"
-        for (item in searchLocation) {
-            item?.let {
-                result += " || $item"
-            }
-        }
-        result += ")"
-        return result
-    }
+
     //Builds the recycler view for the articles
     private fun initRecyclerView() {
         recycler_view.apply {
