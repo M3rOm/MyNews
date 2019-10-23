@@ -21,6 +21,7 @@ class FragTwo : Fragment() {
 
     private var root: View? = null
     private lateinit var newsAdapter: NewsRecyclerAdapter
+    private lateinit var job: Job
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +41,12 @@ class FragTwo : Fragment() {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
+
+    }
+
     private suspend fun networkCall(): Response<Post> {
         return JsonPlaceHolderApi().getMostPopular()
     }
@@ -53,7 +60,7 @@ class FragTwo : Fragment() {
     }
 
     private fun addDataSet() {
-        CoroutineScope(IO).launch {
+        job = CoroutineScope(IO).launch {
             val response = networkCall()
             if (response.isSuccessful) {
                 val post = response.body()!!
@@ -65,7 +72,6 @@ class FragTwo : Fragment() {
         }
     }
 
-
     private fun updateUi(input: List<Results>) {
         newsAdapter.updateNewsItems(input)
     }
@@ -75,6 +81,4 @@ class FragTwo : Fragment() {
             updateUi(input)
         }
     }
-
-
 }

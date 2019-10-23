@@ -21,7 +21,7 @@ class FragOne : Fragment() {
 
     private var root: View? = null
     private lateinit var newsAdapter: NewsRecyclerAdapter
-    //private lateinit var job: CompletableJob
+    private lateinit var job: Job
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,11 +41,11 @@ class FragOne : Fragment() {
 
     }
 
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        job.cancel()
-//
-//    }
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
+
+    }
 
     private suspend fun networkCall(): Response<Post> {
         return JsonPlaceHolderApi().getTopStories()
@@ -60,7 +60,7 @@ class FragOne : Fragment() {
     }
 
     private fun addDataSet() {
-       CoroutineScope(IO).launch {
+        job = CoroutineScope(IO).launch {
             val response = networkCall()
             if (response.isSuccessful) {
                 val post = response.body()!!
@@ -72,7 +72,6 @@ class FragOne : Fragment() {
         }
     }
 
-
     private fun updateUi(input: List<Results>) {
         newsAdapter.updateNewsItems(input)
     }
@@ -82,5 +81,4 @@ class FragOne : Fragment() {
             updateUi(input)
         }
     }
-
 }
