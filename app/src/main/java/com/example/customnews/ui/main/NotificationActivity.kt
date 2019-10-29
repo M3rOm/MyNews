@@ -2,15 +2,18 @@ package com.example.customnews.ui.main
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.SystemClock
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.customnews.R
 import com.example.customnews.services.AlertReceiver
+import com.example.customnews.services.BootReceiver
 import kotlinx.android.synthetic.main.notifications.*
-import org.json.JSONObject
 
 class NotificationActivity : AppCompatActivity() {
 
@@ -24,9 +27,20 @@ class NotificationActivity : AppCompatActivity() {
         //Initialize toolbar
         toolbar_activity_notifications.title = getString(R.string.search_activity_name)
         //Setting the Alarm
+        val intent = Intent(this, AlertReceiver::class.java)
+
+        //check the state of the switch
+        val isAlarmOn = PendingIntent.getBroadcast(
+            this,
+            1,
+            intent,
+            PendingIntent.FLAG_NO_CREATE
+        ) != null
+        if (isAlarmOn) switch1.isChecked = true
         myAlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0)
-        //Called when user switches on notifications
+        pendingIntent =
+            PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        //Called when user taps on the switch button
         switch1.setOnClickListener {
             if (switch1.isChecked) {
                 if (validateSearchCriteria()) {
@@ -45,27 +59,31 @@ class NotificationActivity : AppCompatActivity() {
         }
     }
 
+
     private fun startNotificationSchedule() {
         //Initialize shared preference handle
         val sharedPref = getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
-        val notificationPref = emptyMap<String, String>().toMutableMap()
-
-        notificationPref["expressions"] = notification_search_field.text.toString()
-        notificationPref["locations"] = formatter(doSearchIn())
-
-        val jsonData = JSONObject(notificationPref.toString()).toString()
-        editor.putString("notificationData", jsonData)
+        editor.putString("notifExpression", notification_search_field.text.toString())
+        editor.putString("notifLocations", formatter(doSearchIn()))
         editor.apply()
-        //val intent = Intent(this, AlertReceiver::class.java)
+
         myAlarmManager.setInexactRepeating(
             AlarmManager.ELAPSED_REALTIME,
-            5000,
-            //SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_DAY,
-            //AlarmManager.INTERVAL_DAY,
-            //TODO("Clear test values")
-            60000,
+            //Next two lines are test values
+            //5000,
+            //60000,
+            SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_DAY,
+            AlarmManager.INTERVAL_DAY,
             pendingIntent
+        )
+        //Enable boot receiver
+        val receiver = ComponentName(this, BootReceiver::class.java)
+
+        this.packageManager.setComponentEnabledSetting(
+            receiver,
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            PackageManager.DONT_KILL_APP
         )
     }
 
@@ -125,5 +143,14 @@ class NotificationActivity : AppCompatActivity() {
 
     private fun stopNotificationSchedule() {
         myAlarmManager.cancel(pendingIntent)
+        pendingIntent.cancel()
+        //Disable boot receiver
+        val receiver = ComponentName(this, BootReceiver::class.java)
+
+        this.packageManager.setComponentEnabledSetting(
+            receiver,
+            PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+            PackageManager.DONT_KILL_APP
+        )
     }
 }

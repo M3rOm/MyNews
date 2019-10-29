@@ -10,6 +10,7 @@ import com.example.customnews.data.Docs
 import com.example.customnews.data.Post
 import com.example.customnews.services.JsonPlaceHolderApi
 import com.example.customnews.services.SearchRecyclerAdapter
+import com.example.customnews.services.isNotification
 import kotlinx.android.synthetic.main.frag_one.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,18 +33,31 @@ class SearchResults : AppCompatActivity() {
 
     //Specifying the type of the network call
     private suspend fun networkCall(): Response<Post> {
+        val extra = intent.getIntExtra(isNotification, 0)
         val sharedPref = getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
-        val beginDate = sharedPref.getString("begin", "20180101")
-        val endDate = sharedPref.getString("end", "20190101")
-        val searchTerm = sharedPref.getString("expression","news")
-        val searchLocation = sharedPref.getString("locations", "")
-        return JsonPlaceHolderApi().getSearchResults(
-            searchTerm,
-            searchLocation,
-            "newest",
-            beginDate,
-            endDate
-        )
+        val beginDate = sharedPref.getString("begin", "20180101") ?: "20180101"
+        val endDate = sharedPref.getString("end", "20190101") ?: "20190101"
+        if (extra == 0) {
+            val searchTerm = sharedPref.getString("expression", "news") ?: "news"
+            val searchLocation = sharedPref.getString("locations", "") ?: ""
+            return JsonPlaceHolderApi().getSearchResults(
+                searchTerm,
+                searchLocation,
+                "newest",
+                beginDate,
+                endDate
+            )
+        } else {
+            val searchTerm = sharedPref.getString("notifExpression", "news") ?: "news"
+            val searchLocation = sharedPref.getString("notifLocations", "") ?: ""
+            return JsonPlaceHolderApi().getSearchResults(
+                searchTerm,
+                searchLocation,
+                "newest",
+                beginDate,
+                endDate
+            )
+        }
     }
 
     //Builds the recycler view for the articles
@@ -54,6 +68,7 @@ class SearchResults : AppCompatActivity() {
             adapter = searchAdapter
         }
     }
+
     //Background task for the network operation of fetching the data from the server
     private fun addDataSet() {
         CoroutineScope(Dispatchers.IO).launch {
@@ -69,6 +84,7 @@ class SearchResults : AppCompatActivity() {
             }
         }
     }
+
     //Update the UI on the main thread
     private suspend fun updateOnMainThread(input: List<Docs>) {
         withContext(Dispatchers.Main) {

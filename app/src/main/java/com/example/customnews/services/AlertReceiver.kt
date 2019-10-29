@@ -9,10 +9,13 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.customnews.R
 import com.example.customnews.ui.main.SearchResults
 
+const val isNotification = "com.example.customNews.NOTIFICATION"
+
 
 class AlertReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val intentRec = Intent(context, SearchResults::class.java)
+        intentRec.putExtra(isNotification, 1)
         val pendingIntent = PendingIntent.getActivity(context, 1, intentRec, 0)
         val notificationBuilder = NotificationCompat.Builder(
             context, "1"
