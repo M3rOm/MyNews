@@ -57,9 +57,6 @@ class NewsRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 //Opening browser
                 val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(results.url))
                 itemView.context.startActivity(webIntent)
-                //Mark article as read
-                itemView.setBackgroundColor (ContextCompat.getColor(itemView.context, R.color.colorCardBackgroundClicked))
-
             }
             newsSection.text = results.section
             //Parsing the date pattern("yyyy-MM-dd'T'HH:mm:ssZ")

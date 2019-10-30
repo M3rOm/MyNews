@@ -30,20 +30,22 @@ class SearchActivity : AppCompatActivity() {
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
         //Show it as default end date
-        end_date.setText("$day/${month + 1}/$year")
+        end_date.setText(getString(R.string.date_format_to_show,day,month+1,year))
         //Default begin date is one year less
-        begin_date.setText("$day/${month + 1}/${year - 1}")
+        begin_date.setText(getString(R.string.date_format_to_show,day,month+1,year-1))
         //Create necessary date formats
         val alphaDateFormat = SimpleDateFormat("dd/MM/yyyy")
         val requiredDateFormat = SimpleDateFormat("yyyyMMdd")
         val editor = sharedPref.edit()
+        //Remember the last searched expression
+        if (sharedPref.getString("expression","") != null) search_field.setText(sharedPref.getString("expression",""))
         //Called when user taps on Begin Date field
         begin_date.setOnClickListener {
             val myDatePickerDialog = DatePickerDialog(
                 this,
-                DatePickerDialog.OnDateSetListener { _, mYear, mMonth, mDay ->
+                DatePickerDialog.OnDateSetListener { _, _, _, _ ->
                     //set text in editText
-                    begin_date.setText("$mDay/${mMonth + 1}/$mYear")
+                    begin_date.setText(getString(R.string.date_format_to_show,day,month+1,year))
                     //save a calendar type
                     val chosenDate = alphaDateFormat.parse(begin_date.text.toString())
                     val beginDateToSave = requiredDateFormat.format(chosenDate)
@@ -61,9 +63,9 @@ class SearchActivity : AppCompatActivity() {
         end_date.setOnClickListener {
             val myDatePickerDialog = DatePickerDialog(
                 this,
-                DatePickerDialog.OnDateSetListener { _, mYear, mMonth, mDay ->
+                DatePickerDialog.OnDateSetListener { _, _, _, _ ->
                     //set text in editText
-                    end_date.setText("$mDay/${mMonth + 1}/$mYear")
+                    end_date.setText(getString(R.string.date_format_to_show,day,month+1,year))
                     //save a calendar type
                     val chosenDate = alphaDateFormat.parse(end_date.text.toString())
                     val endDateToSave = requiredDateFormat.format(chosenDate)
@@ -145,8 +147,8 @@ class SearchActivity : AppCompatActivity() {
 
     private fun validateDate(): Boolean {
         val sharedPref = getSharedPreferences(SEARCH, Context.MODE_PRIVATE)
-        val begin = sharedPref.getString("begin", "20180101")
-        val end = sharedPref.getString("end", "20190101")
+        val begin = sharedPref.getString("begin", "20180101")?:"20180101"
+        val end = sharedPref.getString("end", "20190101")?:"20190101"
         val num = end.toInt()
         val num2 = begin.toInt()
         return (num2 <= num)
