@@ -43,9 +43,9 @@ class SearchActivity : AppCompatActivity() {
         begin_date.setOnClickListener {
             val myDatePickerDialog = DatePickerDialog(
                 this,
-                DatePickerDialog.OnDateSetListener { _, _, _, _ ->
+                DatePickerDialog.OnDateSetListener { _, mYear, mMonth, mDay ->
                     //set text in editText
-                    begin_date.setText(getString(R.string.date_format_to_show,day,month+1,year))
+                    begin_date.setText(getString(R.string.date_format_to_show,mDay,mMonth+1,mYear))
                     //save a calendar type
                     val chosenDate = alphaDateFormat.parse(begin_date.text.toString())
                     val beginDateToSave = requiredDateFormat.format(chosenDate)
@@ -63,9 +63,9 @@ class SearchActivity : AppCompatActivity() {
         end_date.setOnClickListener {
             val myDatePickerDialog = DatePickerDialog(
                 this,
-                DatePickerDialog.OnDateSetListener { _, _, _, _ ->
+                DatePickerDialog.OnDateSetListener { _,mYear, mMonth, mDay->
                     //set text in editText
-                    end_date.setText(getString(R.string.date_format_to_show,day,month+1,year))
+                    end_date.setText(getString(R.string.date_format_to_show,mDay,mMonth+1,mYear))
                     //save a calendar type
                     val chosenDate = alphaDateFormat.parse(end_date.text.toString())
                     val endDateToSave = requiredDateFormat.format(chosenDate)
